@@ -4,7 +4,7 @@ package application;
 import database.AddressSQL;
 import database.PersonSQL;
 import database.StudentSQL;
-import database.util.FacultySQL;
+import database.FacultySQL;
 import entity.Address;
 import entity.Faculty;
 import entity.Person;

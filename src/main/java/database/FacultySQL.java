@@ -1,5 +1,6 @@
-package database.util;
+package database;
 
+import database.util.ConnectionPool;
 import entity.Faculty;
 
 import java.sql.*;
