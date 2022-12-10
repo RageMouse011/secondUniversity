@@ -10,13 +10,13 @@ public class Address {
     private String country;
     private String city;
     private String street;
-    private String homeAddress;
+    private String houseAddress;
 
     @Override
     public String toString() {
         return "Address [country=" + country +
                 ", city=" + city +
                 ", street=" + street +
-                ", homeAddress=" + homeAddress + "]";
+                ", homeAddress=" + houseAddress + "]";
     }
 }

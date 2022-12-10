@@ -1,30 +1,53 @@
 package database;
 
 import database.util.ConnectionPool;
-import entity.Faculty;
+import entity.Salary;
 
 import java.sql.*;
 
 import static database.util.Resources.*;
 
-public class FacultySQL {
+public class SalarySQL {
     ConnectionPool connectionPool = new ConnectionPool(dbUrl, dbUser, dbPass, 5);
     Connection connection = null;
 
-    public int registerNewFaculty(Faculty faculty) {
-        String createFaculty = "insert into faculty (name) values (?)";
-        int facultyId = 0;
+    public boolean registerNewSalary(Salary salary) {
+        String createSalary = "insert into salary (salary) values (?)";
+        boolean result = false;
+
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement ps = connection.prepareStatement(createFaculty, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, faculty.getName());
-            ps.execute();
+            PreparedStatement ps = connection.prepareStatement(createSalary);
+            ps.setDouble(1, salary.getSalary());
+            result = ps.execute();
 
-            ResultSet rs = ps.getGeneratedKeys();
-            if(rs.next()) {
-                facultyId = rs.getInt(1);
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connectionPool.returnConnection(connection);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
+        }
+        return result;
+    }
 
+    public double getSalaryId(Double mansSalary) {
+        String getSalary = "select id from salary where salary = ?";
+        double salaryId = 0;
+
+        try {
+            connection = connectionPool.getConnection();
+            PreparedStatement ps = connection.prepareStatement(getSalary);
+            ps.setDouble(1, mansSalary);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                salaryId = rs.getDouble(1);
+            } else throw new SQLException("Такой зарплаты не существует.");
             ps.close();
             rs.close();
         } catch (SQLException e) {
@@ -38,33 +61,6 @@ public class FacultySQL {
                 }
             }
         }
-        return facultyId;
-    }
-
-    public int getIdOfFaculty(String name) {
-        String getIdOfFaculty = "select id from faculty where name = ?";
-        int facultyId = 0;
-
-        try {
-            connection = connectionPool.getConnection();
-            PreparedStatement ps = connection.prepareStatement(getIdOfFaculty);
-            ps.setString(1, name);
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                facultyId = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                try {
-                    connectionPool.returnConnection(connection);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return facultyId;
+        return salaryId;
     }
 }
