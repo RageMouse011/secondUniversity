@@ -40,16 +40,17 @@ public class CareerSQL {
     public int getCareerId(String name) {
         String getCareerId = "select id from career where name = ?";
         int careerId = 0;
+
         try {
             connection = connectionPool.getConnection();
             PreparedStatement ps = connection.prepareStatement(getCareerId);
             ps.setString(1, name);
+
             ResultSet rs = ps.executeQuery();
             if(rs.next()) {
-                careerId = rs.getInt(1);
-            } else {
-                throw new SQLException("Такой должности не существует.");
+                careerId = rs.getInt("id");
             }
+
             ps.close();
             rs.close();
         } catch (SQLException e) {

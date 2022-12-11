@@ -58,7 +58,7 @@ public class AddressSQL {
             ps.setString(4, address.getHouseAddress());
 
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 addressId = rs.getInt("id");
             }
 

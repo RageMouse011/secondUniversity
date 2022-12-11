@@ -36,18 +36,20 @@ public class SalarySQL {
         return result;
     }
 
-    public double getSalaryId(Double mansSalary) {
+    public int getSalaryId(Double mansSalary) {
         String getSalary = "select id from salary where salary = ?";
-        double salaryId = 0;
+        int salaryId = 0;
 
         try {
             connection = connectionPool.getConnection();
             PreparedStatement ps = connection.prepareStatement(getSalary);
             ps.setDouble(1, mansSalary);
+
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                salaryId = rs.getDouble(1);
-            } else throw new SQLException("Такой зарплаты не существует.");
+            while (rs.next()) {
+                salaryId = rs.getInt("id");
+            }
+
             ps.close();
             rs.close();
         } catch (SQLException e) {

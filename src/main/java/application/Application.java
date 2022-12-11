@@ -91,30 +91,102 @@ public class Application {
                         System.out.println("Человека успешно добавлен в базу, теперь введите название факультета " +
                                 "для продолжения регистрации.");
                     }
-                        String personsFaculty = getNewStudent.next();
-                        int facultyId = facultySQL.getIdOfFaculty(personsFaculty);
-                        while (facultyId == 0) {
-                            System.out.println("Такого факультета не существует, введите название факультета " +
-                                    "еще раз: ");
-                            personsFaculty = getNewStudent.next();
-                            facultyId = facultySQL.getIdOfFaculty(personsFaculty);
-                        }
-                        addressId = addressSQL.getIdOfAddress(personsAddress);
-                        int personId = personSQL.getPersonId(person, addressId);
-                        if (personId != 0) {
-                            if (studentSQL.isStudentExists(personId, facultyId) == 0) {
-                                studentSQL.registerNewStudent(personId, facultyId);
-                                System.out.println("Студент успешно зарегистрирован!");
-                            } else {
-                                System.out.println("Студент уже находится в базе.");
-                            }
+                    String personsFaculty = getNewStudent.next();
+                    int facultyId = facultySQL.getIdOfFaculty(personsFaculty);
+                    while (facultyId == 0) {
+                        System.out.println("Такого факультета не существует, введите название факультета " +
+                                "еще раз: ");
+                        personsFaculty = getNewStudent.next();
+                        facultyId = facultySQL.getIdOfFaculty(personsFaculty);
+                    }
+                    addressId = addressSQL.getIdOfAddress(personsAddress);
+                    int personId = personSQL.getPersonId(person, addressId);
+                    if (personId != 0) {
+                        if (studentSQL.isStudentExists(personId, facultyId) == 0) {
+                            studentSQL.registerNewStudent(personId, facultyId);
+                            System.out.println("Студент успешно зарегистрирован!");
                         } else {
-                            System.out.println("Не удалось найди человека в системе, технические неполадки... " +
-                                    "Пожалуйста попробуйте повторить операцию попозже.");
+                            System.out.println("Студент уже находится в базе.");
                         }
+                    } else {
+                        System.out.println("Не удалось найди человека в системе, технические неполадки... " +
+                                "Пожалуйста попробуйте повторить операцию позже.");
+                    }
+                }
 
+                case 5 -> {
+                    Address personsAddress = new Address();
+                    Person person = new Person();
+                    Scanner getNewEmployee = new Scanner(System.in);
 
+                    System.out.println("Введите страну, в которой проживает человек: ");
+                    String personsCountry = getNewEmployee.next();
+                    personsAddress.setCountry(personsCountry);
 
+                    System.out.println("Введите город, в котором проживает человек: ");
+                    String personsCity = getNewEmployee.next();
+                    personsAddress.setCity(personsCity);
+
+                    System.out.println("Введите улицу, на которой проживает человек: ");
+                    String personsStreet = getNewEmployee.next();
+                    personsAddress.setStreet(personsStreet);
+
+                    System.out.println("Введите номер дома, в котором проживает человек: ");
+                    String personsHouseNumber = getNewEmployee.next();
+                    personsAddress.setHouseAddress(personsHouseNumber);
+
+                    System.out.println("Введите имя человека: ");
+                    String personsName = getNewEmployee.next();
+                    person.setFirstName(personsName);
+
+                    System.out.println("Введите фамилию человека: ");
+                    String personsLastName = getNewEmployee.next();
+                    person.setLastName(personsLastName);
+
+                    int addressId = addressSQL.getIdOfAddress(personsAddress);
+                    if (personSQL.getPersonId(person, addressId) != 0) {
+                        System.out.println("Человек был в базе, теперь введите название должности " +
+                                "для продолжения регистрации.");
+                    } else {
+                        personSQL.registerNewPerson(person, addressId, personsAddress);
+                        System.out.println("Человек успешно добавлен в базу, теперь введите название должности " +
+                                "для продолжения регистрации.");
+                    }
+                    String personsCareer = getNewEmployee.next();
+                    int careerId = careerSQL.getCareerId(personsCareer);
+
+                    while (careerId == 0) {
+                        System.out.println("Такой должности не существует, введите название должности " +
+                                "еще раз: ");
+                        personsCareer = getNewEmployee.next();
+                        careerId = facultySQL.getIdOfFaculty(personsCareer);
+                    }
+
+                    System.out.println("Введите зарплату: ");
+                    Double personsSalary = getNewEmployee.nextDouble();
+                    int salaryId = salarySQL.getSalaryId(personsSalary);
+
+                    while(salaryId == 0) {
+                        System.out.println("Вы не можете назначить такую зарплату, " +
+                                "вы должны ввести одну из существующих сумм");
+                        personsSalary = getNewEmployee.nextDouble();
+                        salaryId = salarySQL.getSalaryId(personsSalary);
+                    }
+
+                    addressId = addressSQL.getIdOfAddress(personsAddress);
+                    int personId = personSQL.getPersonId(person, addressId);
+
+                    if (personId != 0) {
+                        if (employeeSQL.isEmployeeExists(personId, careerId, salaryId) == 0) {
+                            employeeSQL.registerNewEmployee(personId, careerId, salaryId);
+                            System.out.println("Сотрудник успешно зарегистрирован!");
+                        } else {
+                            System.out.println("Сотрудник уже находится в базе.");
+                        }
+                    } else {
+                        System.out.println("Не удалось найди человека в системе, технические неполадки... " +
+                                "Пожалуйста попробуйте повторить операцию позже.");
+                    }
                 }
 
             }
