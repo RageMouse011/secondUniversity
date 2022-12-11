@@ -32,8 +32,6 @@ public class PersonSQL {
                     personId = rs.getInt(1);
                 }
 
-
-
                 ps.close();
                 rs.close();
             } else {
