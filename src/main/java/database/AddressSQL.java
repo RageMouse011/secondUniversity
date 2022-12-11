@@ -44,7 +44,7 @@ public class AddressSQL {
         return addressId;
     }
 
-    public int getIdOfAddress(String country, String city, String street, String houseNumber) {
+    public int getIdOfAddress(Address address) {
         String getIdOfAddress = "select id from address where country = ? and city = ? " +
                 "and street = ? and house_number = ?";
         int addressId = 0;
@@ -52,15 +52,18 @@ public class AddressSQL {
         try {
             connection = connectionPool.getConnection();
             PreparedStatement ps = connection.prepareStatement(getIdOfAddress);
-            ps.setString(1, country);
-            ps.setString(2, city);
-            ps.setString(3, street);
-            ps.setString(4, houseNumber);
+            ps.setString(1, address.getCountry());
+            ps.setString(2, address.getCity());
+            ps.setString(3, address.getStreet());
+            ps.setString(4, address.getHouseAddress());
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                addressId = rs.getInt(1);
+                addressId = rs.getInt("id");
             }
+
+            ps.close();
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

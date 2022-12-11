@@ -26,8 +26,8 @@ public class EmployeeSQL {
             ps.setDouble(4, salaryId);
 
             result = ps.execute();
-            ps.close();
 
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

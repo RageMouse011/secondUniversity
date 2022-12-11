@@ -52,8 +52,11 @@ public class FacultySQL {
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                facultyId = rs.getInt(1);
+                facultyId = rs.getInt("id");
             }
+
+            ps.close();
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
