@@ -11,24 +11,29 @@ public class PersonSQL {
     ConnectionPool connectionPool = new ConnectionPool(dbUrl, dbUser, dbPass, 5);
     Connection connection = null;
 
-    public int create(Person person, int addressId) {
+    public int registerNewPerson(Person person, int addressId) {
         String createPerson = "insert into person (first_name, last_name, address_id) values (?, ?, ?)";
         int personId = 0;
+
         try {
-            connection = connectionPool.getConnection();
-            PreparedStatement ps = connection.prepareStatement(createPerson, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, person.getFirstName());
-            ps.setString(2, person.getLastName());
-            ps.setInt(3, addressId);
-            ps.execute();
+            if(!isPersonExist(person.getFirstName(), person.getLastName(), addressId)) {
+                connection = connectionPool.getConnection();
+                PreparedStatement ps = connection.prepareStatement(createPerson, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, person.getFirstName());
+                ps.setString(2, person.getLastName());
+                ps.setInt(3, addressId);
+                ps.execute();
 
-            ResultSet rs = ps.getGeneratedKeys();
-            if(rs.next()) {
-                personId = rs.getInt(1);
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    personId = rs.getInt(1);
+                }
+
+                ps.close();
+                rs.close();
+            } else {
+                System.out.println("Человек есть в системе.");
             }
-
-            ps.close();
-            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -49,16 +54,21 @@ public class PersonSQL {
 
         try {
             connection = connectionPool.getConnection();
-            PreparedStatement ps = connection.prepareStatement(getPersonId);
+            PreparedStatement ps = connection.prepareStatement(getPersonId, Statement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, firstName);
             ps.setString(2, lastName);
             ps.setInt(3, addressId);
 
-            ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next()) {
+                personId = rs.getInt(1);
+            }
+            rs = ps.executeQuery();
             while(rs.next()) {
                 personId = rs.getInt(1);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
